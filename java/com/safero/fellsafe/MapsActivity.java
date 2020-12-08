@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.telephony.SmsManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -69,6 +71,8 @@ SmsManager smsManager;
     Bitmap b ;
      String message;
      String loc;
+
+     Button bt;
      String latlong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,17 @@ message= Savednumbers.getInstance().getnumber(this);
         pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,new Intent(getApplicationContext(),MapsActivity.class),0);
         mapFragment.getMapAsync(this);
     //
+        bt = findViewById(R.id.button3);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent callnextact = new Intent(MapsActivity.this,Crimactivity.class);
+//    call.setData(Uri.parse("tel:"+message));
+                callnextact.putExtra("location",loc);
+                startActivity(callnextact);
+            }
+        });
           sensorManager =(SensorManager) getSystemService(Context.SENSOR_SERVICE);
 mlast = SensorManager.GRAVITY_EARTH;
 mcurrent = SensorManager.GRAVITY_EARTH;
@@ -107,12 +122,8 @@ mcurrent = SensorManager.GRAVITY_EARTH;
 //                startActivity(intent);
                 Toast.makeText(MapsActivity.this,"Device Shaked",Toast.LENGTH_SHORT).show();
 counter++;
-if(counter>8){
+if(counter>4){
 //    counter=0;
-  Intent callnextact = new Intent(MapsActivity.this,Crimactivity.class);
-//    call.setData(Uri.parse("tel:"+message));
-    callnextact.putExtra("location",latlong);
-   startActivity(callnextact);
 
 
 
@@ -216,12 +227,12 @@ mMap.clear();
                             Geocoder geocoder = new Geocoder(MapsActivity.this);
                             try {
                                 List<Address> list = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-                                Toast.makeText(MapsActivity.this,"Permission granted ",Toast.LENGTH_LONG).show();
+                              //  Toast.makeText(MapsActivity.this,"Permission granted ",Toast.LENGTH_LONG).show();
                                 latlong=location.getLatitude()+" "+location.getLongitude();
  loc=list.get(0).getLocality()+" "+
         list.get(0).getSubLocality()+" "+list.get(0).getAdminArea()+" "+list.get(0).getPostalCode()
         +" "+list.get(0).getAddressLine(0)+" "+list.get(0).getAddressLine(1)+" "+list.get(0).getCountryName();
-                                new Sendingclass(MapsActivity.this,loc).start();
+                            //    new Sendingclass(MapsActivity.this,loc).start();
 
                               //  smsManager.sendTextMessage("8920027160",null, list.get(0).getLocality(),null,null);
 
@@ -338,7 +349,7 @@ askforsms();
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(sensorEventListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
-        Toast.makeText(this,"Resumed",Toast.LENGTH_LONG).show();
+     //   Toast.makeText(this,"Resumed",Toast.LENGTH_LONG).show();
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
        // permissionforlocation();
       //         showtheusercurrentlocation();
@@ -355,7 +366,7 @@ askforsms();
         IntentFilter intentFilter = new IntentFilter();
 
 //registerReceiver(myshakereceiver,intentFilter);
-        Toast.makeText(this,"Paused",Toast.LENGTH_LONG).show();
+   //     Toast.makeText(this,"Paused",Toast.LENGTH_LONG).show();
 
     }
 }

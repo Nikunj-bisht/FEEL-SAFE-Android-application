@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Savednumbers {
@@ -56,6 +57,38 @@ Map<String,String> map = (Map<String, String>) sharedPreferences.getAll();
 return map
         .get("number");
     }
+
+    public void savetoken(Context context , String token){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("fcmtoken" , token);
+        editor.apply();
+
+    }
+
+    public boolean gettoken(Context context){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Map<String,String> map = (Map<String, String>) sharedPreferences.getAll();
+
+        return map.containsKey("fcmtoken") ? true : false;
+    }
+
+    public String returntoken(Context context){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Map<String,String> map = (Map<String, String>) sharedPreferences.getAll();
+
+        return map.get("fcmtoken");
+    }
+
+
+
+
     public String getmessage(Context context){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -67,13 +100,13 @@ return map
     }
 
 
-    public boolean checkdata(Context context){
+    public boolean checknumber(Context context){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         Map<String,String> map = (Map<String, String>) sharedPreferences.getAll();
 
 
-        return map.size()>0?true:false;
+        return map.containsKey("number")?true:false;
     }
 
 

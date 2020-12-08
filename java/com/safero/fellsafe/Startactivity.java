@@ -40,6 +40,11 @@ public class Startactivity extends AppCompatActivity {
     EditText editText;
     EditText editText1;
     EditText editText2;
+
+    EditText editText3;
+    EditText editText4;
+    EditText editText5;
+    EditText editText6;
     Button bu;
 
     @Override
@@ -47,51 +52,103 @@ public class Startactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startactivity);
 
+
+
+
         button = findViewById(R.id.button);
-        editText = findViewById(R.id.num);
-        editText1 = findViewById(R.id.email);
-        editText2 = findViewById(R.id.pass);
+        editText = findViewById(R.id.editTextTextPersonName);
+        editText1 = findViewById(R.id.editTextTextPassword);
+        editText2 = findViewById(R.id.editTextPhone);
+
+        editText3 = findViewById(R.id.editTextTextPersonName2);
+        editText4 = findViewById(R.id.editTextTextPersonName3);
+        editText5 = findViewById(R.id.editTextTextEmailAddress);
+        editText6 = findViewById(R.id.editTextTextPersonName4);
+
+
+
+final String token = Savednumbers.getInstance().returntoken(Startactivity.this);
+
+
+
         button.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
 button.setVisibility(View.INVISIBLE);
-findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                final String val = editText.getText().toString();
-                if(!val.equals("")){
+
+//builder.setView(R.layout.alertdialog);
 
 
-String url = "https://safetyapiforw.herokuapp.com/auth/login";
+                final String name = editText.getText().toString();
+
+                final String password = editText1.getText().toString();
+                final String number = editText2.getText().toString();
+                final String loca1 = editText3.getText().toString();
+                final String loca2 = editText4.getText().toString();
+                final String email = editText5.getText().toString();
+                final String prof = editText6.getText().toString();
+                if(!name.equals("") && !password.equals("")
+                        && !number.equals("")
+                        && !loca1.equals("")
+                        && !loca2.equals("")
+                        && !email.equals("") && !prof.equals("")  ){
+
+
+
+String url = "https://safetyapiforw.herokuapp.com/apifor/users";
                     RequestQueue requestQueue = Volley.newRequestQueue(Startactivity.this);
 
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                            // Toast.makeText(Startactivity.this,"Sent",Toast.LENGTH_LONG).show();
-                            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
-findViewById(R.id.donn).setVisibility(View.VISIBLE);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Startactivity.this);
+
 if(response.equals("success")) {
-    new Thread() {
-
-        public void run() {
 
             try {
+                builder.setTitle("Account created successfully");
+                builder.setView(R.layout.alertdialog);
 
-                Savednumbers.getInstance().savenumbers(Startactivity.this,val);
 
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                Thread.sleep(3000);
+                        Intent intent = new Intent(Startactivity.this, Loadingact.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
-                Intent intent = new Intent(Startactivity.this, Loadingact.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } catch (InterruptedException e) {
+                Savednumbers.getInstance().savenumbers(Startactivity.this,number);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
 
-    }.start();
+
+
 }else{
+
+    builder.setTitle("Error please try again!");
+    builder.setView(R.layout.alertdialog);
+
+    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+
+            dialogInterface.cancel();
+        }
+    });
+    AlertDialog dialog = builder.create();
+    dialog.show();
+
     Toast.makeText(Startactivity.this,"Try again",Toast.LENGTH_LONG).show();
     button.setVisibility(View.VISIBLE);
 
@@ -102,7 +159,6 @@ if(response.equals("success")) {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
                             Toast.makeText(Startactivity.this,"Server error try again",Toast.LENGTH_LONG).show();
                             button.setVisibility(View.VISIBLE);
@@ -113,8 +169,15 @@ if(response.equals("success")) {
                         @Override
                         protected Map<String,String> getParams(){
                             HashMap<String,String> map = new HashMap<>();
-                            map.put("userid",editText1.getText().toString());
-                            map.put("pass",editText2.getText().toString());
+                            map.put("nam",name);
+                            map.put("pass",password);
+
+                            map.put("num",number);
+                            map.put("loc1",loca1);
+                            map.put("loc2",loca2);
+                            map.put("email",email);
+                            map.put("prof",prof);
+                            map.put("fcm",token);
                             return map;
                         }
                         @Override
@@ -127,6 +190,9 @@ if(response.equals("success")) {
 
 
 requestQueue.add(stringRequest);
+
+                }else{
+                    button.setVisibility(View.VISIBLE);
 
                 }
             }
