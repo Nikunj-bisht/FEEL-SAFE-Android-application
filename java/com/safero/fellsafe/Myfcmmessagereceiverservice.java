@@ -1,7 +1,11 @@
 package com.safero.fellsafe;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.safero.fellsafe.broadcastreceiver.Receiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +58,7 @@ public class Myfcmmessagereceiverservice extends FirebaseMessagingService {
 
         {
 
+
                     NotificationChannel notificationChannel = new NotificationChannel("channelid","Myfcmnotification",NotificationManager.IMPORTANCE_HIGH);
 
                        notificationChannel.setDescription("This is fcm notification");
@@ -60,11 +66,22 @@ public class Myfcmmessagereceiverservice extends FirebaseMessagingService {
                     notificationManager.createNotificationChannel(notificationChannel);
 
         }
+        Intent intent = new Intent(this,MapsActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+
+        Intent intent1 = new Intent(this, Receiver.class);
+
+        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channelid")
                 .setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_baseline_email_24)
-                .setContentText(body);
+                .setContentText(body)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+.setContentIntent(pendingIntent)
+                .setColor(Color.BLUE)
+                .addAction(R.drawable.ic_baseline_add_ic_call_24,"Call him",actionintent)
+                .setOngoing(true);
 
 
 

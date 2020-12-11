@@ -1,8 +1,9 @@
 package com.safero.fellsafe.datastorageclasses;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.DialogInterface;
+import android.hardware.biometrics.BiometricPrompt;
+import android.os.CancellationSignal;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +13,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.safero.fellsafe.R;
 import com.safero.fellsafe.requestclasses.Anothertokensender;
-import com.safero.fellsafe.requestclasses.Requestclass;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Recycleradapter extends RecyclerView.Adapter<Customview> {
 
     ArrayList<Usersdata> arrayList ;
     Context context;
+foretell formethod;
+String loc;
 
-    public Recycleradapter(ArrayList<Usersdata> arrayL , Context context){
+  public   interface foretell {
+
+        void callstart();
+
+    }
+
+
+    public Recycleradapter(ArrayList<Usersdata> arrayL , Context context , foretell formt , String location){
 
         this.context = context;
         this.arrayList = arrayL;
+this.formethod = formt;
 
-    }
+  this.loc = location;
+  }
 
     @NonNull
     @Override
@@ -52,9 +65,31 @@ public class Recycleradapter extends RecyclerView.Adapter<Customview> {
            holder.getButton().setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
+                   Executor executor = Executors.newSingleThreadExecutor();
 
-                   Sendmessae sendmessae = new Sendmessae(arrayList.get(position).getToken());
-sendmessae.start();
+                   BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(context)    // Biometric just for safety purposes
+                           .setTitle("Please verify first")
+                           .setSubtitle("Go fast")
+                           .setNegativeButton("NO", executor, new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                               }
+                           }).build();
+
+                   biometricPrompt.authenticate(new CancellationSignal(), executor, new BiometricPrompt.AuthenticationCallback() {
+                       @Override
+                       public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                           super.onAuthenticationSucceeded(result);
+                           Sendmessae sendmessae = new Sendmessae(arrayList.get(position).getToken());
+                           sendmessae.start();
+
+                       }
+                   });
+
+
 //                   Intent intent = new Intent(Intent.ACTION_CALL);
 //                   intent.setData(Uri.parse("tel:"+arrayList.get(position).getNumber()));
 //                   context.startActivity(intent);
@@ -81,7 +116,8 @@ sendmessae.start();
         @Override
         public void run() {
 
-            Anothertokensender.sendreq(context,receivertoken);
+
+            Anothertokensender.sendreq(context,receivertoken,formethod,loc);
 
 
 

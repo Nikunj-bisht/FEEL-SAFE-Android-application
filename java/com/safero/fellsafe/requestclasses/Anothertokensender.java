@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.safero.fellsafe.Startactivity;
+import com.safero.fellsafe.datastorageclasses.Recycleradapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +22,7 @@ import java.util.Map;
 
 public class Anothertokensender {
 
-
-    public static void sendreq(final Context context , String mytoken){
+    public static void sendreq(final Context context , String mytoken , final Recycleradapter.foretell fort , String loc){
 
         final String url = "https://fcm.googleapis.com/fcm/send";
 
@@ -35,8 +35,8 @@ public class Anothertokensender {
         JSONObject map  = new JSONObject();
         try {
 
-            notificationdata.put("title","Hello ");
-            notificationdata.put("message","Can you please help me i am here");
+            notificationdata.put("title","Its an emergency help me i am here");
+            notificationdata.put("message",loc);
             map.put("to",mytoken);
             map.put("data",notificationdata);
         } catch (JSONException e) {
@@ -49,7 +49,7 @@ public class Anothertokensender {
             public void onResponse(JSONObject response) {
 
                 Toast.makeText(context,"Sent success" , Toast.LENGTH_SHORT).show();
-
+//fort.callstart();
             }
         }, new Response.ErrorListener() {
             @Override

@@ -36,18 +36,16 @@ import com.safero.fellsafe.datastorageclasses.Usersdata;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Crimactivity extends AppCompatActivity implements View.OnClickListener{
+public class Crimactivity extends AppCompatActivity implements View.OnClickListener , Recycleradapter.foretell{
 
 
     ArrayList<Usersdata> arrayList = new ArrayList<Usersdata>();
     RecyclerView recyclerView;
     Button button;
+    String[] val;
     public static String  check="ACTION_CHECK_STATUS";
 
     private String Action_DO_STUFF = "dostuff";
@@ -58,7 +56,7 @@ public class Crimactivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crimactivity);
 
-final String[] val = getIntent().getStringExtra("location").split(" ");
+val = getIntent().getStringExtra("location").split(" ");
 
 button = findViewById(R.id.button4);
 button.setOnClickListener(this);
@@ -121,7 +119,7 @@ recyclerView = findViewById(R.id.recycle);
 
             {
 
-                NotificationChannel notificationChannel = new NotificationChannel("channelid","Myfcmnotification",NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel notificationChannel = new NotificationChannel("channelid2","Myfcmnotification2",NotificationManager.IMPORTANCE_HIGH);
 
                 notificationChannel.setDescription("This is fcm notification");
 
@@ -129,10 +127,10 @@ recyclerView = findViewById(R.id.recycle);
 
             }
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(Crimactivity.this,"channelid")
-                    .setContentTitle("Nikunj")
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(Crimactivity.this,"channelid2")
+                    .setContentTitle("Dont worry")
                     .setSmallIcon(R.drawable.ic_baseline_email_24)
-                    .setContentText(status+"");
+                    .setContentText("The notifiation has been received by "+status+" users!");
 
 
 
@@ -172,7 +170,7 @@ recyclerView = findViewById(R.id.recycle);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(Crimactivity.this));
 
-               recyclerView.setAdapter(new Recycleradapter(arrayList , Crimactivity.this));
+               recyclerView.setAdapter(new Recycleradapter(arrayList , Crimactivity.this , Crimactivity.this , Arrays.toString(val)));
 
     }
 
@@ -223,7 +221,12 @@ break;
     @Override
     protected void onResume() {
         registerReceiver(broadcastReceiver,new IntentFilter(check));
-        start();
+     //   start();
         super.onResume();
+    }
+
+    @Override
+    public void callstart() {
+start();
     }
 }

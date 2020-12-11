@@ -14,7 +14,7 @@ import androidx.core.app.JobIntentService;
 public class Backgroundservices extends JobIntentService  {
 
     Context context;
-
+int i=0;
 
     public static void enqueuework(Context context , Intent intent)
     {
@@ -28,28 +28,17 @@ public class Backgroundservices extends JobIntentService  {
          @Override
     protected void onHandleWork(@NonNull Intent intent) {
 
-for(int i=0;i<20;i++)
-
-{
-
-Log.d("Hello",Thread.currentThread().getId()+" ");
-
 
 //    Toast.makeText(context,"Hello "+i,Toast.LENGTH_SHORT).show();
-    try {
-        Thread.sleep(1500);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
  Bundle bundle = new Bundle();
     bundle.putInt("status",i);
     sendBroadcast(new Intent().setAction(Crimactivity.check).putExtras(bundle)); // It will send the data to the broadcast receiver which is in  Mainactivity
-
+i++;
 }
 
 
 
-    }
+
 
     @Override
     public boolean onStopCurrentWork() {
