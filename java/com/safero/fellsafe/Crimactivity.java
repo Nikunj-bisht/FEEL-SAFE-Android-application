@@ -1,6 +1,7 @@
 package com.safero.fellsafe;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,14 +11,19 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.hardware.biometrics.BiometricPrompt;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +38,15 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.safero.fellsafe.datastorageclasses.Recycleradapter;
 import com.safero.fellsafe.datastorageclasses.Usersdata;
+import com.safero.fellsafe.requestclasses.Anothertokensender;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Crimactivity extends AppCompatActivity implements View.OnClickListener , Recycleradapter.foretell{
 
@@ -46,6 +55,9 @@ public class Crimactivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
     Button button;
     String[] val;
+    ImageButton imageButton;
+Button butt;
+
     public static String  check="ACTION_CHECK_STATUS";
 
     private String Action_DO_STUFF = "dostuff";
@@ -58,7 +70,12 @@ public class Crimactivity extends AppCompatActivity implements View.OnClickListe
 
 val = getIntent().getStringExtra("location").split(" ");
 
+
+imageButton = findViewById(R.id.imageButton2);
+imageButton.setOnClickListener(this);
 button = findViewById(R.id.button4);
+butt = findViewById(R.id.button9);
+butt.setOnClickListener(this);
 button.setOnClickListener(this);
 recyclerView = findViewById(R.id.recycle);
         String url = "https://safetyapiforw.herokuapp.com/apifor/users/getusers";
@@ -167,6 +184,7 @@ recyclerView = findViewById(R.id.recycle);
 
 
         }
+        findViewById(R.id.finder).setVisibility(View.GONE);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(Crimactivity.this));
 
@@ -202,6 +220,7 @@ recyclerView = findViewById(R.id.recycle);
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onClick(View view) {
 
@@ -213,6 +232,46 @@ recyclerView = findViewById(R.id.recycle);
 startActivity(intent);
 break;
 
+            case R.id.imageButton2:
+
+
+                Intent intent1 = new Intent(this,Videosactivity.class);
+                startActivity(intent1);
+break;
+
+            case R.id.button9:
+                Executor executor = Executors.newSingleThreadExecutor();
+
+
+                BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)    // Biometric just for safety purposes
+                        .setTitle("Please verify first")
+                        .setSubtitle("Go fast")
+                        .setNegativeButton("NO", executor, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                            }
+                        }).build();
+
+                biometricPrompt.authenticate(new CancellationSignal(), executor, new BiometricPrompt.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                        super.onAuthenticationSucceeded(result);
+
+                        for(int i=0;i<arrayList.size();i++){
+
+                            Anothertokensender crimactivity = new Anothertokensender(getApplicationContext(),arrayList.get(i).getToken(),"kl");
+                            crimactivity.start();
+
+                        }
+                    }
+                });
+
+
+
+                break;
         }
 
 

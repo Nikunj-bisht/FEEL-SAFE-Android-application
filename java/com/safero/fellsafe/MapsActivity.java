@@ -293,6 +293,9 @@ mMap.clear();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // intialized the fusedlocationprovider client
+        // this helps in getting the users current location
+
     }
 
     @Override

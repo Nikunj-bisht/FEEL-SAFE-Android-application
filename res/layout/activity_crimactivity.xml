@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBF7F7"
+    android:background="#0B0808"
     android:orientation="vertical"
     tools:context=".Crimactivity">
 
@@ -16,21 +16,50 @@
 
         <Button
             android:id="@+id/button4"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/customforsingle"
-            android:text="See crim near" />
+            android:background="@drawable/backforbuttons"
+            android:text="See crim near"
+            android:textColor="#29f1c3" />
 
         <Button
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/backforbuttons"
+            android:text="Whole area"
+            android:textColor="#29f1c3" />
 
-            android:background="@drawable/customforsingle"
-            android:text="Whole area" />
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/backforbuttons"
+            app:srcCompat="@drawable/ic_baseline_ondemand_video_24" />
     </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/finder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/find"
+        app:lottie_speed="2"></com.airbnb.lottie.LottieAnimationView>
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/backforbuttons"
+        android:drawableLeft="@drawable/ic_baseline_location_on_24"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="Send All"
+        android:textColor="#29f1c3" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"

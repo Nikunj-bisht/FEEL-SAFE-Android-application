@@ -2,19 +2,37 @@ package com.safero.fellsafe.datastorageclasses;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.biometrics.BiometricPrompt;
+import android.net.Uri;
+import android.os.Build;
 import android.os.CancellationSignal;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.safero.fellsafe.R;
+import com.safero.fellsafe.Savednumbers;
 import com.safero.fellsafe.requestclasses.Anothertokensender;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -58,11 +76,21 @@ this.formethod = formt;
     @Override
     public void onBindViewHolder(@NonNull Customview holder, final int position) {
 
+      holder.getView().setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+
+
+
+          }
+      });
+
         holder.getTextView().setText(arrayList.get(position).getName());
         holder.getTextView1().setText(arrayList.get(position).getNumber());
         holder.getTextView2().setText(arrayList.get(position).getProfession());
 
            holder.getButton().setOnClickListener(new View.OnClickListener() {
+               @RequiresApi(api = Build.VERSION_CODES.P)
                @Override
                public void onClick(View view) {
                    Executor executor = Executors.newSingleThreadExecutor();
@@ -90,13 +118,18 @@ this.formethod = formt;
                    });
 
 
-//                   Intent intent = new Intent(Intent.ACTION_CALL);
-//                   intent.setData(Uri.parse("tel:"+arrayList.get(position).getNumber()));
-//                   context.startActivity(intent);
 
                }
            });
+holder.getButt().setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:"+arrayList.get(position).getNumber()));
+        context.startActivity(intent);
 
+    }
+});
 
     }
 
@@ -117,7 +150,61 @@ this.formethod = formt;
         public void run() {
 
 
-            Anothertokensender.sendreq(context,receivertoken,formethod,loc);
+
+            final String url = "https://fcm.googleapis.com/fcm/send";
+
+
+
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+            JSONObject notificationdata = new JSONObject();
+
+            JSONObject map  = new JSONObject();
+            try {
+
+                notificationdata.put("title","Its an emergency help me i am here");
+                notificationdata.put("message",loc);
+                notificationdata.put("number", Savednumbers.getInstance().getnumber(context));
+                map.put("to",receivertoken);
+                map.put("data",notificationdata);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, map, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Toast.makeText(context,"Sent success" , Toast.LENGTH_SHORT).show();
+//fort.callstart();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Toast.makeText(context,"Problem",Toast.LENGTH_LONG).show();
+
+                }
+
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+
+                    Map<String,String> maps = new HashMap<>();
+                    maps.put("Authorization","key=AAAAWzNQBq4:APA91bFKMlMzzeEpn9HnEbiAjEylt3MPxi-fwmzB15-nbP0ROf3IZI8pFoxfeb7CLmnuLjRlvM6SAR11eKwnLkABEKjWbxz70upCvLEo9XKF7GbPJtDk9Dcl4csF7mycJyNpPvi5IxtB");
+                    maps.put("Content-Type","application/json");
+
+                    return maps;
+                }
+            };
+
+
+
+
+
+            requestQueue.add(jsonObjectRequest);
+
 
 
 

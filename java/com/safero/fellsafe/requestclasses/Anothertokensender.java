@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.safero.fellsafe.Savednumbers;
 import com.safero.fellsafe.Startactivity;
 import com.safero.fellsafe.datastorageclasses.Recycleradapter;
 
@@ -19,10 +20,24 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
 
-public class Anothertokensender {
+public class Anothertokensender extends Thread {
 
-    public static void sendreq(final Context context , String mytoken , final Recycleradapter.foretell fort , String loc){
+    Context context;
+    String mytoken;
+    String loc;
+
+    public Anothertokensender(final Context context , String mytoken , String loc){
+
+        this.context = context;
+        this.mytoken = mytoken;
+        this.loc = loc;
+
+    }
+
+
+    public  void run(){
 
         final String url = "https://fcm.googleapis.com/fcm/send";
 
@@ -37,6 +52,7 @@ public class Anothertokensender {
 
             notificationdata.put("title","Its an emergency help me i am here");
             notificationdata.put("message",loc);
+            notificationdata.put("number", Savednumbers.getInstance().getnumber(context));
             map.put("to",mytoken);
             map.put("data",notificationdata);
         } catch (JSONException e) {
@@ -76,6 +92,9 @@ public class Anothertokensender {
 
 
         requestQueue.add(jsonObjectRequest);
+
+
+
 
 
 
