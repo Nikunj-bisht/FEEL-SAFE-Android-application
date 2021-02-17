@@ -53,6 +53,8 @@ public class Anothertokensender extends Thread {
             notificationdata.put("title","Its an emergency help me i am here");
             notificationdata.put("message",loc);
             notificationdata.put("number", Savednumbers.getInstance().getnumber(context));
+            notificationdata.put("type","single");
+
             map.put("to",mytoken);
             map.put("data",notificationdata);
         } catch (JSONException e) {

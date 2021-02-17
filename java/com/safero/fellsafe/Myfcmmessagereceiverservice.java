@@ -46,7 +46,7 @@ public class Myfcmmessagereceiverservice extends FirebaseMessagingService {
 
             shownotification(
                     jsonObject.getString("title"),jsonObject.getString("message")
-            ,jsonObject.getString("number"));
+            ,jsonObject.getString("number"),jsonObject.getString("type"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class Myfcmmessagereceiverservice extends FirebaseMessagingService {
 
     }
 
-    private void shownotification(String title, String body , String num1) {
+    private void shownotification(String title, String body , String num1,String type) {
 
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -84,36 +84,39 @@ intent.putExtras(bundle);
 //        Intent intent1 = new Intent(this, Receiver.class);
 //
 //        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channelid")
-                .setContentTitle(title)
-                .setSmallIcon(R.drawable.ic_baseline_email_24)
-                .setContentText(body)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-.setContentIntent(pendingIntent)
-                .setColor(Color.BLUE)
-              //  .addAction(R.drawable.ic_baseline_add_ic_call_24,"Call him",actionintent)
-                .setOngoing(true);
+if(type.equals("single")){
 
 
 
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channelid")
+            .setContentTitle(title)
+            .setSmallIcon(R.drawable.ic_baseline_email_24)
+            .setContentText(body)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+            .setContentIntent(pendingIntent)
+            .setColor(Color.BLUE)
+            //  .addAction(R.drawable.ic_baseline_add_ic_call_24,"Call him",actionintent)
+            .setOngoing(true);
+    notificationManager.notify(199,builder.build());
 
+
+}
+else{
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channelid")
+            .setContentTitle(title)
+            .setSmallIcon(R.drawable.ic_baseline_email_24)
+            .setContentText(body)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+            .setContentIntent(pendingIntent)
+            .setColor(Color.BLUE)
+            .setTimeoutAfter(4000)
+            //  .addAction(R.drawable.ic_baseline_add_ic_call_24,"Call him",actionintent)
+            .setOngoing(true);
+    notificationManager.notify(199,builder.build());
+
+}
        // NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-
-        AlarmManager alarmManager =(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        Intent intent2 = new Intent(this, Receiver.class);
-
-        PendingIntent actionintent2 = PendingIntent.getBroadcast(this,1,intent2,0);
-alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime()+10,actionintent2);
-
-
-        notificationManager.notify(199,builder.build());
-
         //   notificationManagerCompat.notify(1000,builder.build());
-
 
     }
 

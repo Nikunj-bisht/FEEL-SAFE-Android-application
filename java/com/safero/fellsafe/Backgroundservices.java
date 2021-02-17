@@ -30,11 +30,18 @@ int i=0;
 
 
 //    Toast.makeText(context,"Hello "+i,Toast.LENGTH_SHORT).show();
- Bundle bundle = new Bundle();
-    bundle.putInt("status",i);
-    sendBroadcast(new Intent().setAction(Crimactivity.check).putExtras(bundle)); // It will send the data to the broadcast receiver which is in  Mainactivity
-i++;
-}
+ for(int i=0;i<10;i++){
+
+     sendBroadcast(new Intent().setAction(Usersprofileactivity.check)); // It will send the data to the broadcast receiver which is in  Mainactivity
+     try {
+         Thread.sleep(5000);
+     } catch (InterruptedException e) {
+         e.printStackTrace();
+     }
+
+ }
+
+    }
 
 
 

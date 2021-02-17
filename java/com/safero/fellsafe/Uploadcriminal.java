@@ -24,25 +24,34 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.safero.fellsafe.fragmentspackage.CheckandUploadcontact;
+import com.safero.fellsafe.fragmentspackage.Contactfragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Uploadcriminal extends AppCompatActivity {
+public class Uploadcriminal extends AppCompatActivity implements CheckandUploadcontact.showanotherfragment{
 
-
+Button button;
+String finlocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploadcriminal);
 
+finlocation = getIntent().getStringExtra("fine");
 
-        Fragment fragment = new CheckandUploadcontact(this);
+        Fragment fragment = new CheckandUploadcontact(this,this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,fragment).commit();
 
+
+    }
+    public void anotherfragment(){
+
+Fragment fragment = new Contactfragment(this,finlocation);
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,fragment).commit();
 
     }
 }

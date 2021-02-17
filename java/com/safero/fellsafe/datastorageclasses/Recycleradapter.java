@@ -45,7 +45,7 @@ String loc;
 
   public   interface foretell {
 
-        void callstart();
+        void callstart(int i,String location);
 
     }
 
@@ -79,9 +79,11 @@ this.formethod = formt;
       holder.getView().setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+if(formethod!=null){
 
+    formethod.callstart(position,loc);
 
-
+}
           }
       });
 
@@ -165,6 +167,8 @@ holder.getButt().setOnClickListener(new View.OnClickListener() {
                 notificationdata.put("title","Its an emergency help me i am here");
                 notificationdata.put("message",loc);
                 notificationdata.put("number", Savednumbers.getInstance().getnumber(context));
+                notificationdata.put("type","single");
+
                 map.put("to",receivertoken);
                 map.put("data",notificationdata);
             } catch (JSONException e) {

@@ -31,8 +31,19 @@ public class CheckandUploadcontact extends Fragment implements View.OnClickListe
 
     public Context context;
 
-public CheckandUploadcontact(Context context){
+    String id="";
+
+    showanotherfragment show;
+
+   public interface showanotherfragment{
+
+       void anotherfragment();
+
+   }
+
+public CheckandUploadcontact(Context context , showanotherfragment sh){
     this.context = context;
+    this.show = sh;
 }
     EditText editText;
     ProgressBar progressBar;
@@ -46,9 +57,11 @@ View view = inflater.inflate(R.layout.addcontactfragment,container,false);
          editText = view.findViewById(R.id.editTextPhone2);
         Button button = view.findViewById(R.id.button6);
         progressBar = view.findViewById(R.id.progressBar3);
-
+        Button button1 = view.findViewById(R.id.button10);
+Button button2 = view.findViewById(R.id.button11);
+button2.setOnClickListener(this);
 button.setOnClickListener(this);
-
+button1.setOnClickListener(this);
 
 
 
@@ -80,7 +93,11 @@ progressBar.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
 
                         Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show();
-
+                        try {
+                            id = response.getJSONObject("youruser").getString("_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -97,6 +114,51 @@ progressBar.setVisibility(View.VISIBLE);
 
                 break;
 
+            case R.id.button10:
+
+                String url2 = "https://safetyapiforw.herokuapp.com/apifor/users/createclosecontact";
+                progressBar.setVisibility(View.VISIBLE);
+
+                RequestQueue requestQueue1 = Volley.newRequestQueue(context);
+
+                JSONObject jsonObject1 = new JSONObject();
+                try {
+                    jsonObject1.put("usernumber",Savednumbers.getInstance().getnumber(context));
+                    jsonObject1.put("contactid",id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                JsonObjectRequest jsonArrayRequest1 = new JsonObjectRequest(Request.Method.POST,url2,jsonObject1, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        progressBar.setVisibility(View.INVISIBLE);
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+                requestQueue1.add(jsonArrayRequest1);
+
+
+
+                break;
+
+            case R.id.button11:
+
+                show.anotherfragment();
+
+                break;
 
         }
 

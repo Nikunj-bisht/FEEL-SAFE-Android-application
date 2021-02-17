@@ -57,10 +57,7 @@ public class Crimactivity extends AppCompatActivity implements View.OnClickListe
     String[] val;
     ImageButton imageButton;
 Button butt;
-
-    public static String  check="ACTION_CHECK_STATUS";
-
-    private String Action_DO_STUFF = "dostuff";
+String fulllocation;
 
     private ServiceConnection serviceConnection;
     @Override
@@ -121,44 +118,7 @@ recyclerView = findViewById(R.id.recycle);
 
 
     }
-    public void start(){
-        Backgroundservices.enqueuework(Crimactivity.this,new Intent().setAction(Action_DO_STUFF));
-    }
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            int status = intent.getExtras().getInt("status");
-
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-            {
-
-                NotificationChannel notificationChannel = new NotificationChannel("channelid2","Myfcmnotification2",NotificationManager.IMPORTANCE_HIGH);
-
-                notificationChannel.setDescription("This is fcm notification");
-
-                notificationManager.createNotificationChannel(notificationChannel);
-
-            }
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(Crimactivity.this,"channelid2")
-                    .setContentTitle("Dont worry")
-                    .setSmallIcon(R.drawable.ic_baseline_email_24)
-                    .setContentText("The notifiation has been received by "+status+" users!");
-
-
-
-
-            // NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-
-            notificationManager.notify(199,builder.build());
-
-
-        }
-    };
 
     private void displaytouser(JSONObject response) throws JSONException {
 
@@ -187,8 +147,8 @@ recyclerView = findViewById(R.id.recycle);
         findViewById(R.id.finder).setVisibility(View.GONE);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(Crimactivity.this));
-
-               recyclerView.setAdapter(new Recycleradapter(arrayList , Crimactivity.this , Crimactivity.this , Arrays.toString(val)));
+       fulllocation =  Arrays.toString(val);
+               recyclerView.setAdapter(new Recycleradapter(arrayList , Crimactivity.this , Crimactivity.this ,fulllocation));
 
     }
 
@@ -213,6 +173,9 @@ recyclerView = findViewById(R.id.recycle);
         else if(item.getItemId() == R.id.crim){
 
             Intent intent = new Intent(this , Uploadcriminal.class);
+
+   intent.putExtra("fine",fulllocation);
+
             startActivity(intent);
 
         }
@@ -279,13 +242,20 @@ break;
 
     @Override
     protected void onResume() {
-        registerReceiver(broadcastReceiver,new IntentFilter(check));
+     //   registerReceiver(broadcastReceiver,new IntentFilter(check));
      //   start();
         super.onResume();
     }
 
     @Override
-    public void callstart() {
-start();
+    public void callstart(int i,String location) {
+
+Intent intent = new Intent(this,Usersprofileactivity.class);
+
+intent.putExtra("user",arrayList.get(i));
+intent.putExtra("loca",location);
+
+startActivity(intent);
+
     }
 }

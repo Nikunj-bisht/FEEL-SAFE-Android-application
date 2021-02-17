@@ -1,12 +1,18 @@
 package com.safero.fellsafe.datastorageclasses;
 
-public class Usersdata {
+import java.io.Serializable;
+
+public class Usersdata implements Serializable {
 
     private String name;
     private String number;
     private String location1;
     private String profession;
     private String token;
+
+    Usersdata(){
+
+    }
 
     public Usersdata(String name, String number, String location1, String profession, String token) {
         this.name = name;
