@@ -1,5 +1,5 @@
 # Location-sender-android-app
-android app which send the complete details of the location where you are in and continuously sends sms to the number that you had registered in app
+android app which send the complete details of the location where you are in and continuously sends push notifications to the peoples that are around you and to your close contacts as well that you had registered in app
 ![1626120418106](https://user-images.githubusercontent.com/52692588/125349738-8b26f200-e37b-11eb-859e-ef10310bad27.jpg)
 ![1626120418101](https://user-images.githubusercontent.com/52692588/125349804-9ed25880-e37b-11eb-804f-38fd7952bdf8.jpg)
 ![1626120589746](https://user-images.githubusercontent.com/52692588/125349837-a72a9380-e37b-11eb-80ed-acf07e74d31c.jpg)
